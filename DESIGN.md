@@ -12,3 +12,6 @@ This is a java-based project for solving mathematical equations
 - Solve quadratic equations
 - Parse user input
 - Display formatted solutions
+  
+# Project structure 
+
