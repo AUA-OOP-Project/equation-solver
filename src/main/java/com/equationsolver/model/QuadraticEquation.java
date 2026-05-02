@@ -1,20 +1,9 @@
 package com.equationsolver.model;
 
-public class QuadraticEquation extends Equation {
-
-    private final double a;
-    private final double b;
-    private final double c;
+// Represents: ax² + bx + c = 0
+public class QuadraticEquation extends PolynomialEquation {
 
     public QuadraticEquation(String rawInput, double a, double b, double c) {
-        super(rawInput, EquationType.QUADRATIC);
-        this.a = a;
-        this.b = b;
-        this.c = c;
-    }
-
-    @Override
-    public double[] getCoefficients() {
-        return new double[]{a, b, c};
+        super(rawInput, EquationType.QUADRATIC, a, b, c);
     }
 }
