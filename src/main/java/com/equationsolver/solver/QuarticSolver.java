@@ -1,10 +1,14 @@
 package com.equationsolver.solver;
 
+import com.equationsolver.exception.InvalidEquationException;
+import com.equationsolver.model.CubicEquation;
 import com.equationsolver.model.Equation;
 import com.equationsolver.model.EquationType;
-import com.equationsolver.model.QuarticEquation;
-import com.equationsolver.model.RawEquation;
+import com.equationsolver.model.QuadraticEquation;
 import com.equationsolver.model.Solution;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuarticSolver extends EquationSolver {
 
@@ -13,12 +17,8 @@ public class QuarticSolver extends EquationSolver {
 
     @Override
     protected void validate(Equation equation) {
-        if (!(equation instanceof QuarticEquation)) {
-            throw new IllegalArgumentException("Equation must be a QuarticEquation.");
-        }
-        double[] coeffs = equation.getCoefficients();
-        if (coeffs[0] == 0) {
-            throw new IllegalArgumentException("Leading coefficient 'a' cannot be zero.");
+        if (equation.getType() != EquationType.QUARTIC) {
+            throw new InvalidEquationException(equation.getRawInput());
         }
     }
 
@@ -27,37 +27,77 @@ public class QuarticSolver extends EquationSolver {
         double[] c = equation.getCoefficients();
         double a = c[0], b = c[1], p = c[2], q = c[3], e = c[4];
 
+        List<String> steps = new ArrayList<>();
+        steps.add("Standard form: ax⁴ + bx³ + cx² + dx + e = 0");
+        steps.add("a=" + a + ", b=" + b + ", c=" + p + ", d=" + q + ", e=" + e);
+
         // normalize so leading coefficient is 1
         b /= a; p /= a; q /= a; e /= a;
+        steps.add("Normalize: divide all by a");
 
-        // step 1 — depress: substitute x = t - b/4
+        // depress: substitute x = t - b/4
         double shift = b / 4.0;
         double dp = p - 6 * shift * shift;
-        double dq = q + 2 * p * shift - 8 * shift * shift * shift;
-        double dr = e - q * shift + p * shift * shift - 3 * shift * shift * shift * shift;
+        double dq = q + 2 * p * shift - 8 * Math.pow(shift, 3);
+        double dr = e - q * shift + p * shift * shift - 3 * Math.pow(shift, 4);
+        steps.add("Depress via x = t - b/4,  shift=" + shift);
 
-        // step 2 — resolvent cubic: m³ + (dp/2)m² + ((dp²−4dr)/16)m − dq²/64 = 0
+        // Biquadratic special case: when dq ≈ 0 the depressed quartic is t⁴ + dp·t² + dr = 0.
+        // Substitute y = t² and solve the quadratic directly — the resolvent cubic approach
+        // always gives inner = 2m + dp < 0 for symmetric biquadratics, producing no roots.
+        if (Math.abs(dq) < 1e-10) {
+            steps.add("|dq| ≈ 0: biquadratic — substitute y = t², solve y² + dp·y + dr = 0");
+            Solution ySol = quadraticSolver.solve(
+                    new QuadraticEquation(equation.getRawInput(), 1, dp, dr));
+            List<Double> allRoots = new ArrayList<>();
+            for (double y : ySol.getRoots()) {
+                if (y >= -1e-10) {
+                    double sqrtY = Math.sqrt(Math.max(0, y));
+                    allRoots.add( sqrtY - shift);
+                    allRoots.add(-sqrtY - shift);
+                }
+            }
+            if (allRoots.isEmpty()) return Solution.noSolution(EquationType.QUARTIC, steps);
+            double[] roots = allRoots.stream().mapToDouble(Double::doubleValue).toArray();
+            steps.add("Roots: " + roots.length + " real root(s) found");
+            return Solution.of(roots, EquationType.QUARTIC, steps);
+        }
+
+        // resolvent cubic
         double ca = 1;
         double cb = dp / 2.0;
         double cc = (dp * dp - 4 * dr) / 16.0;
         double cd = -(dq * dq) / 64.0;
+        steps.add("Solve resolvent cubic: t³ + " + cb + "t² + " + cc + "t + " + cd + " = 0");
 
         Solution cubicSolution = cubicSolver.solve(
-                new RawEquation(EquationType.CUBIC, ca, cb, cc, cd)
+                new CubicEquation(equation.getRawInput(), ca, cb, cc, cd)
         );
         double m = cubicSolution.getRoots()[0];
+        steps.add("Resolvent cubic root m=" + m);
 
-        // step 3 — split into two quadratics and collect real roots
-        double inner = 2 * m + dp;
+        // split into two quadratics
+        double inner    = 2 * m + dp;
         if (inner < 0) inner = 0;
         double sqrtInner = Math.sqrt(inner);
 
-        double[] q1roots, q2roots;
+        double[] q1roots = quadraticSolver.solve(
+                new QuadraticEquation(equation.getRawInput(), 1, sqrtInner, m + (Math.abs(sqrtInner) < 1e-10 ? 0 : dq / (2 * sqrtInner)))
+        ).getRoots();
 
-        if (Math.abs(sqrtInner) < 1e-10) {
-            q1roots = quadraticSolver.solve(
-                    new RawEquation(EquationType.QUADRATIC, 1, 0, m)
-            ).getRoots();
-            q2roots = quadraticSolver.solve(
-                    new RawEquation(EquationType.QUADRATIC, 1, 0, m)
-            )
+        double[] q2roots = quadraticSolver.solve(
+                new QuadraticEquation(equation.getRawInput(), 1, -sqrtInner, m - (Math.abs(sqrtInner) < 1e-10 ? 0 : dq / (2 * sqrtInner)))
+        ).getRoots();
+
+        // collect and shift back all real roots
+        List<Double> allRoots = new ArrayList<>();
+        for (double r : q1roots) allRoots.add(r - shift);
+        for (double r : q2roots) allRoots.add(r - shift);
+
+        double[] roots = allRoots.stream().mapToDouble(Double::doubleValue).toArray();
+        steps.add("Roots after back-substitution: " + roots.length + " real root(s) found");
+
+        if (roots.length == 0) return Solution.noSolution(EquationType.QUARTIC, steps);
+        return Solution.of(roots, EquationType.QUARTIC, steps);
+    }
+}
