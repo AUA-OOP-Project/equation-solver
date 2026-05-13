@@ -1,5 +1,6 @@
 package com.equationsolver.parser;
 
+import com.equationsolver.exception.InvalidEquationException;
 import com.equationsolver.model.CubicEquation;
 import com.equationsolver.model.Equation;
 import com.equationsolver.model.EquationType;
@@ -36,14 +37,12 @@ public class CubicEquationParser implements EquationParser {
             } else if (matcher.group(3) != null) {
                 c = parseCoefficient(matcher.group(3));
             } else if (matcher.group(4) != null) {
-                d = Double.parseDouble(matcher.group(4)); 
+                d = Double.parseDouble(matcher.group(4));
             }
         }
 
         if (a == 0) {
-            throw new IllegalArgumentException(
-                    "Not a cubic equation — coefficient 'a' is zero: " + input
-            );
+            throw new InvalidEquationException(input);
         }
 
         return new CubicEquation(raw, a, b, c, d);
