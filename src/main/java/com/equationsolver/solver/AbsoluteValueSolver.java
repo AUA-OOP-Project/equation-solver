@@ -1,99 +1,58 @@
 package com.equationsolver.solver;
 
 import com.equationsolver.exception.InvalidEquationException;
-import com.equationsolver.model.*;
+import com.equationsolver.model.AbsoluteValueEquation;
+import com.equationsolver.model.Equation;
+import com.equationsolver.model.EquationType;
+import com.equationsolver.model.Solution;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// Solves |ax + b| = c
 public class AbsoluteValueSolver extends EquationSolver {
-
-    private final LinearSolver linearSolver = new LinearSolver();
 
     @Override
     protected void validate(Equation equation) {
         if (equation.getType() != EquationType.ABSOLUTE_VALUE) {
             throw new InvalidEquationException(equation.getRawInput());
         }
-        AbsoluteValueEquation abs = (AbsoluteValueEquation) equation;
-        if (abs.getA() == 0) {
-            throw new InvalidEquationException(equation.getRawInput());
-        }
     }
 
     @Override
     protected Solution doSolve(Equation equation) {
-        AbsoluteValueEquation abs = (AbsoluteValueEquation) equation;
-
-        double a = abs.getA();
-        double b = abs.getB();
-        double c = abs.getC();
-        double d = abs.getD();
+        AbsoluteValueEquation eq = (AbsoluteValueEquation) equation;
+        double a = eq.getA();
+        double b = eq.getB();
+        double c = eq.getC();
 
         List<String> steps = new ArrayList<>();
-        steps.add("Original: |" + fmt(a) + "x + " + fmt(b) + "| + " + fmt(c) + " = " + fmt(d));
+        steps.add("Standard form: |ax + b| = c,  a=" + format(a) + ", b=" + format(b) + ", c=" + format(c));
 
-        double k = d - c;
-        steps.add("Normalize: move constant to rhs → |" + fmt(a) + "x + " + fmt(b) + "| = " + fmt(k));
-
-
-        if (k < 0) {
-            steps.add("k = " + fmt(k) + " < 0 → no solution (absolute value cannot be negative)");
+        if (c < 0) {
+            steps.add("c < 0  →  absolute value is always ≥ 0, no real solution");
             return Solution.noSolution(EquationType.ABSOLUTE_VALUE, steps);
         }
 
-        steps.add("Split into two cases:");
-        steps.add("  Case 1: " + fmt(a) + "x + " + fmt(b) + " = "  + fmt(k));
-        steps.add("  Case 2: " + fmt(a) + "x + " + fmt(b) + " = -" + fmt(k));
-
-
-        double x1 = solveLinear(a, b - k, steps, 1);
-        double x2 = solveLinear(a, b + k, steps, 2);
-
-
-        List<Double> validRoots = new ArrayList<>();
-
-        if (isValid(x1, a, b, k)) {
-            steps.add("  x₁ = " + fmt(x1) + " → valid (rhs ≥ 0)");
-            validRoots.add(x1);
-        } else {
-            steps.add("  x₁ = " + fmt(x1) + " → rejected (makes rhs negative)");
+        if (c == 0) {
+            steps.add("c = 0  →  ax + b = 0  →  x = " + format(-b / a));
+            double x = -b / a;
+            return Solution.of(new double[]{x}, EquationType.ABSOLUTE_VALUE, steps);
         }
 
+        // |ax + b| = c  →  ax + b = c  OR  ax + b = -c
+        steps.add("Case 1: ax + b = c  →  ax = c - b  →  x = (c - b) / a");
+        double x1 = (c - b) / a;
+        steps.add("x₁ = (" + format(c) + " - " + format(b) + ") / " + format(a) + " = " + format(x1));
 
-        if (k != 0) {
-            if (isValid(x2, a, b, k)) {
-                steps.add("  x₂ = " + fmt(x2) + " → valid (rhs ≥ 0)");
-                validRoots.add(x2);
-            } else {
-                steps.add("  x₂ = " + fmt(x2) + " → rejected (makes rhs negative)");
-            }
-        }
+        steps.add("Case 2: ax + b = -c  →  ax = -c - b  →  x = (-c - b) / a");
+        double x2 = (-c - b) / a;
+        steps.add("x₂ = (-" + format(c) + " - " + format(b) + ") / " + format(a) + " = " + format(x2));
 
-        if (validRoots.isEmpty()) {
-            return Solution.noSolution(EquationType.ABSOLUTE_VALUE, steps);
-        }
-
-        double[] roots = validRoots.stream().mapToDouble(Double::doubleValue).toArray();
-        return Solution.of(roots, EquationType.ABSOLUTE_VALUE, steps);
+        return Solution.of(new double[]{x1, x2}, EquationType.ABSOLUTE_VALUE, steps);
     }
 
-    private double solveLinear(double a, double b, List<String> steps, int caseNum) {
-        LinearEquation eq = new LinearEquation("case" + caseNum, a, b);
-        Solution solution  = linearSolver.solve(eq);
-        double x           = solution.getRoots()[0];
-        steps.add("  Case " + caseNum + " solved: x = " + fmt(x));
-        return x;
-    }
-
-
-    private boolean isValid(double x, double a, double b, double k) {
-        double lhs = Math.abs(a * x + b);
-        return Math.abs(lhs - k) < 1e-9;
-    }
-
-
-    private String fmt(double v) {
+    private String format(double v) {
         return v == (long) v ? String.valueOf((long) v) : String.valueOf(v);
     }
 }
