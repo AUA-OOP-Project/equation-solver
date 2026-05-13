@@ -1,9 +1,10 @@
 package com.equationsolver.solver;
 
-import com.equationsolver.model.CubicEquation;
+import com.equationsolver.exception.InvalidEquationException;
 import com.equationsolver.model.Equation;
 import com.equationsolver.model.EquationType;
 import com.equationsolver.model.Solution;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,15 +12,10 @@ public class CubicSolver extends EquationSolver {
 
     @Override
     protected void validate(Equation equation) {
-        if (!(equation instanceof CubicEquation)) {
-            throw new IllegalArgumentException("Equation must be a CubicEquation");
-        }
-        double[] coefficients = equation.getCoefficients();
-        if (coefficients[0] == 0) {
-            throw new IllegalArgumentException("Coefficient 'a' cannot be zero in a cubic equation");
+        if (equation.getType() != EquationType.CUBIC) {
+            throw new InvalidEquationException(equation.getRawInput());
         }
     }
-
 
     @Override
     protected Solution doSolve(Equation equation) {
@@ -29,23 +25,31 @@ public class CubicSolver extends EquationSolver {
         double c = coefficients[2];
         double d = coefficients[3];
 
-        double[] pq  = toDepressedForm(a, b, c, d);
-        double p     = pq[0];
-        double q     = pq[1];
-        double delta = computeDelta(p, q);
+        List<String> steps = new ArrayList<>();
+        steps.add("Standard form: ax³ + bx² + cx + d = 0,  a=" + a + ", b=" + b + ", c=" + c + ", d=" + d);
+
+        double[] pq    = toDepressedForm(a, b, c, d);
+        double p       = pq[0];
+        double q       = pq[1];
+        steps.add("Depressed cubic t³ + pt + q = 0,  p=" + p + ", q=" + q);
+
+        double delta   = computeDelta(p, q);
+        steps.add("Discriminant Δ = " + delta);
 
         List<Double> tRoots;
         if (delta > 1e-9) {
+            steps.add("Δ > 0  →  3 distinct real roots (trigonometric method)");
             tRoots = trigMethod(p, q);
         } else {
+            steps.add("Δ ≤ 0  →  Cardano's formula");
             tRoots = cardano(p, q);
         }
 
         double[] roots = shiftBack(tRoots, a, b, c, d);
+        steps.add("Back-substituted roots: " + formatRoots(roots));
 
-        return Solution.of(roots, EquationType.CUBIC);
+        return Solution.of(roots, EquationType.CUBIC, steps);
     }
-
 
     private double[] toDepressedForm(double a, double b, double c, double d) {
         double p = (3 * a * c - b * b) / (3 * a * a);
@@ -53,11 +57,9 @@ public class CubicSolver extends EquationSolver {
         return new double[]{p, q};
     }
 
-
     private double computeDelta(double p, double q) {
         return -(4 * Math.pow(p, 3) + 27 * Math.pow(q, 2));
     }
-
 
     private List<Double> trigMethod(double p, double q) {
         List<Double> roots = new ArrayList<>();
@@ -71,7 +73,6 @@ public class CubicSolver extends EquationSolver {
         return roots;
     }
 
-
     private List<Double> cardano(double p, double q) {
         List<Double> roots = new ArrayList<>();
         double D = Math.pow(q / 2, 2) + Math.pow(p / 3, 3);
@@ -80,7 +81,6 @@ public class CubicSolver extends EquationSolver {
         roots.add(u + v);
         return roots;
     }
-
 
     private double[] shiftBack(List<Double> tRoots, double a, double b, double c, double d) {
         double shift   = b / (3 * a);
@@ -92,7 +92,6 @@ public class CubicSolver extends EquationSolver {
         return roots;
     }
 
-
     private double newtonRefine(double x, double a, double b, double c, double d) {
         for (int i = 0; i < 10; i++) {
             double fx  = a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d;
@@ -101,5 +100,14 @@ public class CubicSolver extends EquationSolver {
             x = x - fx / fpx;
         }
         return x;
+    }
+
+    private String formatRoots(double[] roots) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < roots.length; i++) {
+            sb.append("x").append(i + 1).append("=").append(String.format("%.4f", roots[i]));
+            if (i < roots.length - 1) sb.append(", ");
+        }
+        return sb.toString();
     }
 }
