@@ -1,5 +1,6 @@
 package com.equationsolver.parser;
 
+import com.equationsolver.exception.InvalidEquationException;
 import com.equationsolver.model.Equation;
 import com.equationsolver.model.EquationType;
 import com.equationsolver.model.QuadraticEquation;
@@ -40,9 +41,7 @@ public class QuadraticEquationParser implements EquationParser {
         }
 
         if (a == 0) {
-            throw new IllegalArgumentException(
-                    "Not a quadratic equation — coefficient 'a' is zero: " + input
-            );
+            throw new InvalidEquationException(input);
         }
 
         return new QuadraticEquation(raw, a, b, c);
