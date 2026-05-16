@@ -9,7 +9,18 @@ import com.equationsolver.model.TrigonometricEquation;
 import java.util.ArrayList;
 import java.util.List;
 
-// Solves cos(x) = rhs, returns principal values in [0, π]
+/**
+ * Solves cosine equations of the form {@code cos(x) = rhs}.
+ *
+ * <p>Returns the two principal values in one period:
+ * <ul>
+ *   <li>{@code x₁ = arccos(rhs)} — in [0, π]</li>
+ *   <li>{@code x₂ = -arccos(rhs)}</li>
+ * </ul>
+ * Rejects inputs with {@code |rhs| > 1} (no real solution).
+ * The general solution is {@code x = ±x₁ + 2πk} for any integer k,
+ * but only the principal values are returned.
+ */
 public class CosineSolver extends EquationSolver {
 
     @Override

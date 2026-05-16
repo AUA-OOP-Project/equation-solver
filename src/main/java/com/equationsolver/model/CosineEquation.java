@@ -1,6 +1,9 @@
 package com.equationsolver.model;
 
-// Represents: cos(x) = rhs
+/**
+ * Model for a cosine equation of the form {@code cos(x) = rhs}.
+ * Period is {@code 2π}; valid domain for {@code rhs} is {@code [-1, 1]}.
+ */
 public class CosineEquation extends TrigonometricEquation {
 
     public CosineEquation(String rawInput, double rhs) {

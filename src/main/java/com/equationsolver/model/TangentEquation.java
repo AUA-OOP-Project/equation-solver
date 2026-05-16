@@ -1,5 +1,9 @@
 package com.equationsolver.model;
 
+/**
+ * Model for a tangent equation of the form {@code tan(x) = rhs}.
+ * Period is {@code π}; {@code rhs} is unrestricted (all real numbers are valid).
+ */
 public class TangentEquation extends TrigonometricEquation {
 
     public TangentEquation(String rawInput, double rhs) {

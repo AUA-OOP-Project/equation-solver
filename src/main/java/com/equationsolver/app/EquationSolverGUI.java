@@ -20,6 +20,21 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+/**
+ * Graphical entry point for the Equation Solver, built with Swing and FlatLaf.
+ *
+ * <p>Features:
+ * <ul>
+ *   <li>Live equation type detection badge as the user types.</li>
+ *   <li>Left panel listing all supported equation types with clickable examples.</li>
+ *   <li>Solve history panel showing previous inputs and results.</li>
+ *   <li>HTML-rendered step-by-step solution output on the right.</li>
+ *   <li>Copy result button and ESC key to clear input.</li>
+ * </ul>
+ *
+ * <p>Uses the Catppuccin Mocha dark color palette via FlatLaf 3.4.1.
+ * Launch via {@link #main(String[])}.
+ */
 public class EquationSolverGUI {
 
     // Catppuccin Mocha palette

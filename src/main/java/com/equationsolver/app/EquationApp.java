@@ -10,6 +10,14 @@ import com.equationsolver.solver.SolverFactory;
 
 import java.util.Scanner;
 
+/**
+ * Command-line entry point for the Equation Solver.
+ *
+ * <p>Reads equations interactively from standard input, detects their type via
+ * {@link com.equationsolver.parser.ParserFactory}, parses them, solves them via
+ * {@link com.equationsolver.solver.SolverFactory}, and prints the result with
+ * step-by-step workings. Type {@code exit} to quit.
+ */
 public class EquationApp {
 
     public static void main(String[] args) {

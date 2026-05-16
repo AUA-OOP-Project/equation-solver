@@ -8,7 +8,9 @@ import com.equationsolver.model.EquationType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Parses: cos(x) = rhs
+/**
+ * Parses cosine equations of the form {@code cos(x) = rhs} (case-insensitive).
+ */
 public class CosineEquationParser implements EquationParser {
 
     private static final Pattern COSINE_PATTERN = Pattern.compile(

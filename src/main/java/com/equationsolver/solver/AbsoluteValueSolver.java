@@ -9,7 +9,16 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
-// Solves |ax + b| = c
+/**
+ * Solves absolute value equations of the form {@code |ax + b| = c}.
+ *
+ * <p>Three cases based on {@code c}:
+ * <ul>
+ *   <li>{@code c < 0} → no solution (absolute value is always non-negative)</li>
+ *   <li>{@code c = 0} → one solution: {@code x = -b/a}</li>
+ *   <li>{@code c > 0} → two solutions: {@code x = (-b + c)/a} and {@code x = (-b - c)/a}</li>
+ * </ul>
+ */
 public class AbsoluteValueSolver extends EquationSolver {
 
     @Override

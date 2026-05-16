@@ -6,6 +6,18 @@ import com.equationsolver.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves rational equations of the form {@code P(x) / Q(x) = 0}.
+ *
+ * <p>A rational equation equals zero when its numerator equals zero and the
+ * denominator is non-zero. The solver:
+ * <ol>
+ *   <li>Solves the numerator polynomial {@code P(x) = 0} using the appropriate
+ *       delegate solver (linear, quadratic, or cubic).</li>
+ *   <li>Filters out any root {@code x} for which {@code Q(x) = 0}
+ *       (these are excluded values / vertical asymptotes).</li>
+ * </ol>
+ */
 public class RationalSolver extends EquationSolver {
 
     @Override

@@ -8,6 +8,13 @@ import com.equationsolver.model.LinearEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses linear equations of the form {@code ax + b = 0}.
+ *
+ * <p>Extracts the x coefficient and constant term from the left-hand side.
+ * The right-hand side must be a numeric constant (e.g., {@code 2x + 4 = 0}
+ * or {@code 2x = -4}).
+ */
 public class LinearEquationParser implements EquationParser {
 
     // matches the x coefficient: optional sign, optional number, then 'x'

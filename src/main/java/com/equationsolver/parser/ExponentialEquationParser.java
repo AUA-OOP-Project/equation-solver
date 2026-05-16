@@ -8,6 +8,13 @@ import com.equationsolver.model.ExponentialEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses exponential equations of the form {@code base^x = rhs}
+ * (e.g. {@code 2^x = 8}, {@code e^x = 5}).
+ *
+ * <p>The base may be a numeric literal or the symbol {@code e} / {@code E},
+ * which is interpreted as Euler's number ({@link Math#E}).
+ */
 public class ExponentialEquationParser implements EquationParser {
 
     // matches: base^x = rhs  (e.g. "2^x = 8", "e^x = 5", "10^x = 100")

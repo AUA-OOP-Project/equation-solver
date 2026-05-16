@@ -9,6 +9,16 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves exponential equations of the form {@code a^x = b}.
+ *
+ * <p>Solution: {@code x = log(b) / log(a) = log_a(b)}.
+ * <ul>
+ *   <li>{@code b ≤ 0} → no real solution (a positive base raised to any power is always positive)</li>
+ *   <li>{@code a = 1} → no solution (1^x = 1 ≠ b for b ≠ 1) or infinite solutions if b = 1</li>
+ *   <li>Otherwise → unique solution {@code x = ln(b) / ln(a)}</li>
+ * </ul>
+ */
 public class ExponentialSolver extends EquationSolver {
 
     @Override

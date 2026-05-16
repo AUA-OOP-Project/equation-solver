@@ -8,6 +8,12 @@ import com.equationsolver.model.QuarticEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses quartic equations of the form {@code ax⁴ + bx³ + cx² + dx + e = 0}.
+ *
+ * <p>Uses a regex pattern to scan the left-hand side for {@code x^4}, {@code x^3},
+ * {@code x^2}, {@code x}, and constant terms. Terms may appear in any order.
+ */
 public class QuarticEquationParser implements EquationParser {
 
     private static final Pattern TERM_PATTERN = Pattern.compile(

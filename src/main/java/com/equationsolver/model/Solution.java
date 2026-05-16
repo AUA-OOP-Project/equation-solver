@@ -6,6 +6,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Immutable value object that holds the result of solving an equation.
+ *
+ * <p>A solution can represent one of three outcomes:
+ * <ul>
+ *   <li><b>Finite roots</b> – one or more real roots stored in the roots array.</li>
+ *   <li><b>No solution</b> – the equation has no real roots (e.g., discriminant &lt; 0).</li>
+ *   <li><b>Infinite solutions</b> – the equation is an identity (e.g., 0 = 0).</li>
+ * </ul>
+ *
+ * <p>Use the static factory methods to create instances:
+ * <ul>
+ *   <li>{@link #of(double[], EquationType)} / {@link #of(double[], EquationType, List)}</li>
+ *   <li>{@link #noSolution(EquationType)} / {@link #noSolution(EquationType, List)}</li>
+ *   <li>{@link #infiniteSolutions(EquationType)} / {@link #infiniteSolutions(EquationType, List)}</li>
+ * </ul>
+ *
+ * <p>Solvers may optionally attach step-by-step explanations via the {@code steps} list,
+ * accessible through {@link #getSteps()} and rendered by {@link #displayWithSteps()}.
+ */
 public class Solution implements Displayable {
 
     private final double[] roots;

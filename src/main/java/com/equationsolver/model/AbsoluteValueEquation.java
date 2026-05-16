@@ -1,6 +1,11 @@
 package com.equationsolver.model;
 
-// Represents: |ax + b| = c
+/**
+ * Model for an absolute value equation of the form {@code |ax + b| = c}.
+ *
+ * <p>Stores the three scalar parameters {@code a}, {@code b}, and {@code c} directly.
+ * {@link #getCoefficients()} returns {@code [a, b, c]}.
+ */
 public class AbsoluteValueEquation extends Equation {
 
     private final double a;

@@ -8,6 +8,13 @@ import com.equationsolver.model.RationalEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses rational equations of the form {@code (P(x)) / (Q(x)) = 0}.
+ *
+ * <p>Both numerator and denominator must be wrapped in parentheses.
+ * Each polynomial expression is parsed into a coefficient array ordered
+ * from the highest-degree term to the constant.
+ */
 public class RationalEquationParser implements EquationParser {
 
     // matches: (numerator) / (denominator) with optional = 0

@@ -7,6 +7,12 @@ import com.equationsolver.model.EquationType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses cubic equations of the form {@code ax³ + bx² + cx + d = 0}.
+ *
+ * <p>Uses a regex pattern to scan the left-hand side for {@code x³}, {@code x²},
+ * {@code x}, and constant terms. Terms may appear in any order.
+ */
 public class CubicEquationParser implements EquationParser {
 
     private static final Pattern TERM_PATTERN = Pattern.compile(

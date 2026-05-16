@@ -8,7 +8,9 @@ import com.equationsolver.model.TangentEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Parses: tan(x) = rhs
+/**
+ * Parses tangent equations of the form {@code tan(x) = rhs} (case-insensitive).
+ */
 public class TangentEquationParser implements EquationParser {
 
     private static final Pattern TANGENT_PATTERN = Pattern.compile(

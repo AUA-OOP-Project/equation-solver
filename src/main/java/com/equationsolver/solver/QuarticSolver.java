@@ -10,6 +10,23 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves quartic equations of the form {@code ax⁴ + bx³ + cx² + dx + e = 0}
+ * using Ferrari's method via a resolvent cubic.
+ *
+ * <p>Algorithm steps:
+ * <ol>
+ *   <li>Normalize: divide all coefficients by {@code a}.</li>
+ *   <li>Depress: substitute {@code x = t - b/4} to eliminate the x³ term.</li>
+ *   <li>Biquadratic shortcut: if the linear term {@code |dq| ≈ 0}, substitute
+ *       {@code y = t²} and solve the resulting quadratic in {@code y} directly.</li>
+ *   <li>Otherwise, solve the resolvent cubic to find a value {@code m}, then
+ *       split the quartic into two quadratics and solve each.</li>
+ *   <li>Shift all roots back by {@code b/4}.</li>
+ * </ol>
+ *
+ * <p>Internally delegates to {@link CubicSolver} and {@link QuadraticSolver}.
+ */
 public class QuarticSolver extends EquationSolver {
 
     private final CubicSolver cubicSolver = new CubicSolver();

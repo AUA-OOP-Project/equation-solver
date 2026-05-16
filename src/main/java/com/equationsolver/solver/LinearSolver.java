@@ -8,6 +8,16 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves linear equations of the form {@code ax + b = 0}.
+ *
+ * <p>Handles all three possible outcomes:
+ * <ul>
+ *   <li>{@code a ≠ 0} → unique solution: {@code x = -b / a}</li>
+ *   <li>{@code a = 0, b = 0} → infinite solutions (identity {@code 0 = 0})</li>
+ *   <li>{@code a = 0, b ≠ 0} → no solution (contradiction)</li>
+ * </ul>
+ */
 public class LinearSolver extends EquationSolver {
 
     @Override

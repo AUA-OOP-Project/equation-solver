@@ -8,7 +8,13 @@ import com.equationsolver.model.EquationType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Parses: |ax + b| = c
+/**
+ * Parses absolute value equations of the form {@code |ax + b| = c}.
+ *
+ * <p>Uses a regex to capture the expression inside {@code |...|} and the
+ * right-hand side constant {@code c}, then extracts {@code a} and {@code b}
+ * from the inner expression.
+ */
 public class AbsoluteValueEquationParser implements EquationParser {
 
     // captures everything inside |...| and the rhs after '='

@@ -8,7 +8,9 @@ import com.equationsolver.model.SineEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Parses: sin(x) = rhs
+/**
+ * Parses sine equations of the form {@code sin(x) = rhs} (case-insensitive).
+ */
 public class SineEquationParser implements EquationParser {
 
     private static final Pattern SINE_PATTERN = Pattern.compile(

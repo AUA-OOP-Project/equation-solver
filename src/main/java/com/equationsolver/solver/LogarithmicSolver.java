@@ -9,6 +9,12 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves logarithmic equations of the form {@code log_a(x) = b} or {@code ln(x) = b}.
+ *
+ * <p>Solution: {@code x = a^b} (or {@code x = e^b} for natural log).
+ * The result is only valid for {@code x > 0}; negative or zero results are rejected.
+ */
 public class LogarithmicSolver extends EquationSolver {
 
     @Override

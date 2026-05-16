@@ -8,6 +8,14 @@ import com.equationsolver.model.LogarithmicEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses logarithmic equations in three supported forms:
+ * <ul>
+ *   <li>{@code ln(x) = rhs}          — natural log, base {@code e}</li>
+ *   <li>{@code log(x) = rhs}         — common log, base 10</li>
+ *   <li>{@code log2(x) = rhs} or {@code log_2(x) = rhs} — explicit base</li>
+ * </ul>
+ */
 public class LogarithmicEquationParser implements EquationParser {
 
     // log2(x) = 3   or   log_2(x) = 3

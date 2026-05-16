@@ -7,6 +7,12 @@ import com.equationsolver.model.QuadraticEquation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses quadratic equations of the form {@code ax² + bx + c = 0}.
+ *
+ * <p>Uses a regex pattern to scan the left-hand side for {@code x²}, {@code x},
+ * and constant terms. Terms may appear in any order.
+ */
 public class QuadraticEquationParser implements EquationParser {
 
     private static final Pattern TERM_PATTERN = Pattern.compile(

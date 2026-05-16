@@ -8,6 +8,17 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves quadratic equations of the form {@code ax² + bx + c = 0}
+ * using the quadratic formula.
+ *
+ * <p>Discriminant Δ = b² - 4ac determines the number of real roots:
+ * <ul>
+ *   <li>Δ &gt; 0 → two distinct real roots: {@code x = (-b ± √Δ) / 2a}</li>
+ *   <li>Δ = 0 → one repeated real root: {@code x = -b / 2a}</li>
+ *   <li>Δ &lt; 0 → no real roots</li>
+ * </ul>
+ */
 public class QuadraticSolver extends EquationSolver {
 
     @Override

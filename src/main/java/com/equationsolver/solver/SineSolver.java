@@ -9,7 +9,18 @@ import com.equationsolver.model.TrigonometricEquation;
 import java.util.ArrayList;
 import java.util.List;
 
-// Solves sin(x) = rhs, returns principal values in [-π/2, π/2]
+/**
+ * Solves sine equations of the form {@code sin(x) = rhs}.
+ *
+ * <p>Returns the two principal values in one period:
+ * <ul>
+ *   <li>{@code x₁ = arcsin(rhs)} — in [-π/2, π/2]</li>
+ *   <li>{@code x₂ = π - arcsin(rhs)}</li>
+ * </ul>
+ * Rejects inputs with {@code |rhs| > 1} (no real solution).
+ * The general solution is {@code x = x₁ + 2πk} or {@code x = x₂ + 2πk} for any integer k,
+ * but only the principal values are returned.
+ */
 public class SineSolver extends EquationSolver {
 
     @Override

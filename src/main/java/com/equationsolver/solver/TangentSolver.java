@@ -9,6 +9,14 @@ import com.equationsolver.model.TrigonometricEquation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves tangent equations of the form {@code tan(x) = rhs}.
+ *
+ * <p>Returns the principal value {@code x = arctan(rhs)} in (-π/2, π/2).
+ * Unlike sine and cosine, tangent has no domain restriction on {@code rhs},
+ * so a solution always exists for any real {@code rhs}.
+ * The general solution is {@code x = arctan(rhs) + πk} for any integer k.
+ */
 public class TangentSolver extends EquationSolver {
 
     @Override

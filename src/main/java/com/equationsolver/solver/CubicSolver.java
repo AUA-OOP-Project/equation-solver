@@ -8,6 +8,25 @@ import com.equationsolver.model.Solution;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Solves cubic equations of the form {@code ax³ + bx² + cx + d = 0}
+ * using Cardano's method.
+ *
+ * <p>Algorithm steps:
+ * <ol>
+ *   <li>Normalize: divide all coefficients by {@code a}.</li>
+ *   <li>Depress: substitute {@code x = t - b/3} to eliminate the x² term,
+ *       yielding the depressed cubic {@code t³ + pt + q = 0}.</li>
+ *   <li>Evaluate discriminant {@code Δ = -(4p³ + 27q²)}:
+ *     <ul>
+ *       <li>Δ &gt; 0 → three distinct real roots (trigonometric / Viète method)</li>
+ *       <li>Δ = 0 → repeated real root</li>
+ *       <li>Δ &lt; 0 → one real root, two complex conjugate roots (not returned)</li>
+ *     </ul>
+ *   </li>
+ *   <li>Shift results back by {@code b/3}.</li>
+ * </ol>
+ */
 public class CubicSolver extends EquationSolver {
 
     @Override
